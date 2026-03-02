@@ -1,0 +1,249 @@
+﻿@{
+    ViewData["Title"] = $"Товар #{ViewBag.ProductId}";
+}
+
+<h1>@ViewBag.ProductName</h1>
+
+<div class="product-details">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Основная информация</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>ID товара:</strong> @ViewBag.ProductId</p>
+                    <p><strong>Название:</strong> @ViewBag.ProductName</p>
+                    <p><strong>Цена:</strong> <span class="price">@((ViewBag.ProductId * 1000).ToString("C"))</span></p>
+                    <p><strong>Описание:</strong> Это детальная информация о товаре с ID @ViewBag.ProductId</p>
+
+                    <!--Отображение рейтинга в виде звездочек -->
+                    <p>
+                        <strong>Рейтинг товара:</strong>
+                        <span class="rating-stars">
+                            @{
+                                // Генерируем случайный рейтинг от 1 до 5 на основе ID товара
+                                int rating = (ViewBag.ProductId % 5) + 1;
+                                for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= rating)
+                                    {
+                                        <span class="star filled">★</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="star">☆</span>
+                                    }
+                                }
+                            }
+                        </span>
+                        <span class="rating-value">(@rating/5)</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Технические характеристики</h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Производитель: Example Corp.</li>
+                        <li>Модель: MOD-@ViewBag.ProductId</li>
+                        <li>Гарантия: 12 месяцев</li>
+                        <li>Наличие: <span class="text-success">В наличии</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <h3>Действия с товаром:</h3>
+    <div class="product-actions">
+        <button class="btn btn-lg btn-primary" onclick="buyProduct(@ViewBag.ProductId)">Купить сейчас</button>
+        <button class="btn btn-lg btn-outline-secondary" onclick="addToWishlist(@ViewBag.ProductId)">В избранное</button>
+        <button class="btn btn-lg btn-success" onclick="addToCart(@ViewBag.ProductId)">В корзину</button>
+
+        <!-- Кнопка печати -->
+        <button class="btn btn-lg btn-info" onclick="window.print()">🖨️ Распечатать информацию о товаре</button>
+    </div>
+
+    <hr>
+
+    <h3>Навигация по товарам:</h3>
+    <div class="product-navigation">
+        @{
+            int prevId = ViewBag.ProductId - 1;
+            int nextId = ViewBag.ProductId + 1;
+        }
+
+        <div class="btn-group" role="group">
+            @if (prevId > 0)
+            {
+                <!--: Ссылка на предыдущий товар -->
+                <a href="/store/product/@prevId/details" class="btn btn-outline-primary">
+                    ← Предыдущий товар (ID: @prevId)
+                </a>
+            }
+            else
+            {
+                <button class="btn btn-outline-secondary" disabled>← Предыдущий товар (нет)</button>
+            }
+
+            <!-- Ссылка на следующий товар -->
+            @if (nextId <= 100)
+            {
+                <a href="/store/product/@nextId/details" class="btn btn-outline-primary">
+                    Следующий товар (ID: @nextId) →
+                </a>
+            }
+            else
+            {
+                <button class="btn btn-outline-secondary" disabled>Следующий товар (нет) →</button>
+            }
+        </div>
+    </div>
+
+    <hr>
+
+    <h3>Тестирование разных товаров:</h3>
+    <div class="test-products">
+        <div class="btn-group" role="group">
+            <a href="/store/product/1/details" class="btn @(ViewBag.ProductId == 1 ? "btn-primary" : "btn-outline-primary")">Товар #1</a>
+            <a href="/store/product/10/details" class="btn @(ViewBag.ProductId == 10 ? "btn-primary" : "btn-outline-secondary")">Товар #10</a>
+            <a href="/store/product/42/details" class="btn @(ViewBag.ProductId == 42 ? "btn-primary" : "btn-outline-success")">Товар #42</a>
+            <a href="/shop/product/100/details" class="btn @(ViewBag.ProductId == 100 ? "btn-primary" : "btn-outline-warning")">Товар #100 (через shop)</a>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="debug-info">
+        <h4>Отладочная информация:</h4>
+        <p><strong>Текущий URL:</strong> @Context.Request.Path</p>
+        <p><strong>Маршрут:</strong> product/{id}/details</p>
+        <p><strong>Тип параметра id:</strong> @ViewBag.ProductId</p>
+    </div>
+
+    <hr>
+
+    <div class="navigation-links">
+        <a href="/store" class="btn btn-secondary">← Назад в магазин</a>
+        <a href="/store/category/electronics" class="btn btn-link">Перейти к категориям</a>
+    </div>
+</div>
+
+<style>
+    .product-details {
+        margin: 20px 0;
+    }
+
+    .price {
+        color: #28a745;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 15px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+    }
+
+    .test-products {
+        margin: 20px 0;
+    }
+
+    .debug-info {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        border-left: 4px solid #6c757d;
+    }
+
+    /*  Стили для навигации */
+    .product-navigation {
+        margin: 20px 0;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    /* Добавлено: Стили для звездочек рейтинга */
+    .rating-stars {
+        display: inline-block;
+        font-size: 1.5em;
+        letter-spacing: 2px;
+    }
+
+    .star {
+        display: inline-block;
+    }
+
+        .star.filled {
+            color: #ffc107;
+            text-shadow: 0 0 2px #ff8c00;
+        }
+
+    .rating-value {
+        margin-left: 10px;
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+
+    /* Стили для печати */
+    @@media print {
+        .product-actions, .test-products, .debug-info, .navigation-links, .product-navigation {
+            display: none;
+        }
+
+        body {
+            font-size: 12pt;
+            color: #000;
+        }
+
+        .rating-stars {
+            font-size: 16pt;
+        }
+    }
+
+  
+    }
+</style>
+
+<script>
+    function buyProduct(productId) {
+        alert('Покупка товара #' + productId + ' оформлена!');
+    }
+
+    function addToWishlist(productId) {
+        alert('Товар #' + productId + ' добавлен в избранное!');
+    }
+
+    function addToCart(productId) {
+        alert('Товар #' + productId + ' добавлен в корзину!');
+    }
+
+    // Дополнительная информация при печати
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('Страница товара загружена');
+        console.log('Product ID: ', @ViewBag.ProductId);
+        console.log('Product Name: ', '@ViewBag.ProductName');
+        console.log('URL: ', window.location.href);
+    });
+
+    //  Событие перед печатью
+    window.onbeforeprint = function () {
+        console.log('Подготовка к печати страницы товара #' + @ViewBag.ProductId);
+    };
+</script>

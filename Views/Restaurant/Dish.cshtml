@@ -1,0 +1,273 @@
+﻿@{
+    ViewData["Title"] = ViewData["PageTitle"];
+}
+
+<div class="dish-details">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/restaurant">Главная</a></li>
+            <li class="breadcrumb-item"><a href="/restaurant/menu">Меню</a></li>
+            <li class="breadcrumb-item"><a href="/restaurant/menu#@ViewBag.DishCategory">@ViewBag.DishCategory</a></li>
+            <li class="breadcrumb-item active">@ViewBag.DishName</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="dish-header">
+                <h1>@ViewBag.DishName</h1>
+                <p class="category-badge">Категория: @ViewBag.DishCategory</p>
+            </div>
+
+            <div class="dish-info card">
+                <div class="card-body">
+                    <h3>Описание</h3>
+                    <p class="dish-description">@ViewBag.DishDescription</p>
+
+                    <h3>Цена</h3>
+                    @if (ViewBag.HasDiscount)
+                    {
+                        <p class="price-discount">
+                            <span class="old-price">@ViewBag.DishPrice ₽</span>
+                            <span class="new-price">@ViewBag.DiscountPrice ₽</span>
+                            <span class="discount-badge">Скидка 10%</span>
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="price">@ViewBag.DishPrice ₽</p>
+                    }
+
+                    <h3>Рейтинг блюда</h3>
+                    <div class="rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= ViewBag.DishRating)
+                            {
+                                <span class="star filled">★</span>
+                            }
+                            else
+                            {
+                                <span class="star">☆</span>
+                            }
+                        }
+                        <span>(@ViewBag.DishRating/5)</span>
+                    </div>
+
+                    <h3>Характеристики</h3>
+                    <ul class="dish-features">
+                        <li>📦 ID блюда: @ViewBag.DishId</li>
+                        <li>📅 Дата просмотра: @ViewData["CurrentDate"]</li>
+                        @if (ViewBag.Dish.IsSpicy)
+                        {
+                            <li>🌶️ Острое блюдо</li>
+                        }
+                        @if (ViewBag.Dish.IsVegetarian)
+                        {
+                            <li>🌱 Подходит для вегетарианцев</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="actions-card card">
+                <div class="card-header">
+                    <h3>Действия</h3>
+                </div>
+                <div class="card-body">
+                    <a href="/restaurant/booking" class="btn btn-success btn-block">🍽️ Забронировать столик</a>
+                    <button class="btn btn-info btn-block" onclick="window.print()">🖨️ Распечатать</button>
+                </div>
+            </div>
+
+            <div class="navigation-card card">
+                <div class="card-header">
+                    <h3>Навигация</h3>
+                </div>
+                <div class="card-body">
+                    <div class="nav-buttons">
+                        @if (ViewBag.PrevId != null)
+                        {
+                            <a href="/restaurant/dish/@ViewBag.PrevId" class="btn btn-outline-primary">← Предыдущее блюдо</a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-secondary" disabled>← Нет предыдущего</button>
+                        }
+
+                        @if (ViewBag.NextId != null)
+                        {
+                            <a href="/restaurant/dish/@ViewBag.NextId" class="btn btn-outline-primary">Следующее блюдо →</a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-secondary" disabled>Нет следующего →</button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="similar-card card">
+                <div class="card-header">
+                    <h3>В этой же категории</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="similar-list">
+                        @foreach (var dish in ViewBag.DishesByCategory[ViewBag.DishCategory])
+                        {
+                            if ((int)dish.GetType().GetProperty("Id").GetValue(dish) != ViewBag.DishId)
+                            {
+                                <li>
+                                    <a href="/restaurant/dish/@dish.Id">@dish.Name</a>
+                                    <span class="similar-price">@dish.Price ₽</span>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <a href="/restaurant/menu" class="btn btn-secondary">← Назад в меню</a>
+</div>
+
+<style>
+    .dish-details {
+        margin: 20px 0;
+    }
+
+    .breadcrumb {
+        background-color: #f8f9fa;
+        padding: 10px 15px;
+        border-radius: 5px;
+    }
+
+    .dish-header {
+        margin-bottom: 20px;
+    }
+
+    .category-badge {
+        display: inline-block;
+        padding: 5px 15px;
+        background-color: #6c757d;
+        color: white;
+        border-radius: 20px;
+        font-size: 0.9em;
+    }
+
+    .dish-description {
+        font-size: 1.1em;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    .price {
+        font-size: 2em;
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .price-discount {
+        font-size: 1.5em;
+    }
+
+    .old-price {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 0.8em;
+    }
+
+    .new-price {
+        color: #28a745;
+        font-weight: bold;
+        font-size: 1.2em;
+        margin-left: 10px;
+    }
+
+    .discount-badge {
+        background-color: #ff4444;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 3px;
+        font-size: 0.6em;
+        margin-left: 10px;
+    }
+
+    .rating {
+        font-size: 1.3em;
+        margin: 10px 0;
+    }
+
+    .star.filled {
+        color: #ffc107;
+    }
+
+    .dish-features {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .dish-features li {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .actions-card, .navigation-card, .similar-card {
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .nav-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-block {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .similar-list {
+        list-style-type: none;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+    .similar-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .similar-list li:last-child {
+        border-bottom: none;
+    }
+
+    .similar-price {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    @@media print {
+        .actions-card, .navigation-card, .similar-card, .breadcrumb, .btn {
+            display: none;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Страница блюда загружена');
+        console.log('Блюдо: @ViewBag.DishName');
+        console.log('Цена: @ViewBag.DishPrice');
+    });
+</script>

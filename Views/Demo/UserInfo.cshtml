@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Информация о пользователе";
+}
+
+<h1>Информация о пользователе: @ViewBag.Name</h1>
+
+<ul>
+    <li>Имя: @ViewBag.Name</li>
+    <li>Возраст: @ViewBag.Age лет</li>
+    <li>Статус: @(ViewBag.IsAdult ? "Совершеннолетний" : "Несовершеннолетний")</li>
+    <li>Год рождения: @ViewData["BirthYear"]</li>
+    <li>Текущий год: @ViewData["CurrentYear"]</li>
+</ul>

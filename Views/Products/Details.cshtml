@@ -1,0 +1,105 @@
+﻿@model MvcLab1.Models.Product
+@{
+	ViewData["Title"] = "Детали товара";
+}
+<h1>Детали товара</h1>
+<div>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-3">
+			@Html.DisplayNameFor(model => model.Id)
+		</dt>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(model => model.Id)
+		</dd>
+		<dt class="col-sm-3">
+			@Html.DisplayNameFor(model => model.Name)
+		</dt>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(model => model.Name)
+		</dd>
+		<dt class="col-sm-3">
+			@Html.DisplayNameFor(model => model.Category)
+		</dt>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(model => model.Category)
+		</dd>
+		<dt class="col-sm-3">
+			@Html.DisplayNameFor(model => model.Price)
+		</dt>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(model => model.Price)
+		</dd>
+		<dt class="col-sm-3">
+			@Html.DisplayNameFor(model => model.Description)
+		</dt>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(model => model.Description)
+		</dd>
+		<dt class="col-sm-3">
+			@Html.DisplayNameFor(model => model.CreatedDate)
+		</dt>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(model => model.CreatedDate)
+		</dd>
+		<dt class="col-sm-3">
+			@Html.DisplayNameFor(model => model.InStock)
+		</dt>
+		<dd class="col-sm-9">
+			@if (Model.InStock)
+			{
+				<span class="badge bg-success">В наличии</span>
+			}
+			else
+			{
+				<span class="badge bg-danger">Нет в наличии</span>
+			}
+		</dd>
+	</dl>
+</div>
+<div class="row mt-4">
+	<div class="col-md-6">
+		<div class="card">
+			<div class="card-header">
+				<h5>Расчет скидки</h5>
+			</div>
+			<div class="card-body">
+				<p>Цена: <strong>@Model.Price.ToString("C")</strong></p>
+				<p>
+					Цена со скидкой 5%:
+					<strong>@Model.GetDiscountedPrice(5).ToString("C")</strong>
+				</p>
+				<p>
+					Цена со скидкой 10%:
+					<strong>@Model.GetDiscountedPrice(10).ToString("C")</strong>
+				</p>
+				<p>
+					Цена со скидкой 15%:
+					<strong>@Model.GetDiscountedPrice(15).ToString("C")</strong>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="card">
+			<div class="card-header">
+				<h5>Информация</h5>
+			</div>
+			<div class="card-body">
+				<p>
+					<strong>Дата добавления:</strong>
+					@Model.CreatedDate.ToString("dd.MM.yyyy")
+				</p>
+				<p>
+					<strong>Дней в каталоге:</strong> @((DateTime.Now -
+					Model.CreatedDate).Days) дней
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="mt-4">
+	<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btnwarning">Редактировать</a>
+	<a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+	<a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger floatend">Удалить</a>
+</div>
