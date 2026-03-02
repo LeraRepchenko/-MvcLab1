@@ -1,0 +1,92 @@
+﻿@model MvcLab1.Models.Recipe
+
+@{
+    ViewData["Title"] = "Удаление рецепта";
+}
+
+<h1>Удаление рецепта</h1>
+
+<div class="alert alert-danger">
+    <h3>Вы уверены, что хотите удалить этот рецепт?</h3>
+</div>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cuisine)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cuisine)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Difficulty)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Difficulty)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PrepTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PrepTime) минут
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CookTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CookTime) минут
+        </dd>
+
+        <dt class="col-sm-2">
+            Общее время приготовления
+        </dt>
+        <dd class="col-sm-10">
+            @Model.GetTotalTime() минут
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Ingredients)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ingredients)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Instructions)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Instructions)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>

@@ -1,0 +1,93 @@
+﻿@model MvcLab1.Models.Recipe
+
+@{
+    ViewData["Title"] = "Редактирование рецепта";
+}
+
+<h1>Редактирование рецепта</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedDate" />
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Cuisine" class="form-label"></label>
+                    <input asp-for="Cuisine" class="form-control" />
+                    <span asp-validation-for="Cuisine" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Difficulty" class="form-label"></label>
+                    <select asp-for="Difficulty" class="form-control">
+                        <option value="">Выберите сложность</option>
+                        <option value="Легко">Легко</option>
+                        <option value="Средне">Средне</option>
+                        <option value="Сложно">Сложно</option>
+                    </select>
+                    <span asp-validation-for="Difficulty" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PrepTime" class="form-label"></label>
+                    <input asp-for="PrepTime" class="form-control" />
+                    <span asp-validation-for="PrepTime" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CookTime" class="form-label"></label>
+                    <input asp-for="CookTime" class="form-control" />
+                    <span asp-validation-for="CookTime" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Ingredients" class="form-label"></label>
+                <textarea asp-for="Ingredients" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Ingredients" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Instructions" class="form-label"></label>
+                <textarea asp-for="Instructions" class="form-control" rows="6"></textarea>
+                <span asp-validation-for="Instructions" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Информация</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>ID:</strong> @Model.Id</p>
+                <p><strong>Дата добавления:</strong> @Model.CreatedDate.ToShortDateString()</p>
+                <p><strong>Общее время:</strong> @Model.GetTotalTime() минут</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
