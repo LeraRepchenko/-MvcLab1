@@ -1,21 +1,48 @@
+using Microsoft.EntityFrameworkCore;
+using MvcLab1.Data;
 using MvcLab1.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ========== РЕГИСТРАЦИЯ СЕРВИСОВ 
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IProductRepository, InMemoryProductRepository>();
-builder.Services.AddScoped<IRecipeRepository, InMemoryRecipeRepository>();
 
+// Регистрация контекста базы данных
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .LogTo(Console.WriteLine, LogLevel.Information)
+        .EnableSensitiveDataLogging());
+
+// Регистрация репозитория 
+builder.Services.AddScoped<IRecipeRepository, EfRecipeRepository>();
+
+// ========== СБОРКА ПРИЛОЖЕНИЯ ==========
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ========== ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ ==========
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await SeedData.InitializeAsync(dbContext);
+}
+
+// ========== КОНФИГУРАЦИЯ MIDDLEWARE ==========
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
