@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MvcLab1.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Топ простых рецептов";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-auto">
+        <label class="form-label">Количество рецептов</label>
+        <input type="number" name="count" class="form-control"
+               value="@ViewBag.Count" min="1" max="20" step="1">
+    </div>
+    <div class="col-auto align-self-end">
+        <button type="submit" class="btn btn-primary">Показать</button>
+        <a asp-action="Index" class="btn btn-secondary">Назад</a>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">Нет легких рецептов в базе данных</div>
+}
+else
+{
+    <div class="alert alert-success">
+        <strong>🍳 Топ @ViewBag.Count самых простых и быстрых рецептов!</strong>
+    </div>
+
+    <div class="row">
+        @{
+            int rank = 1;
+        }
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 mb-3">
+                <div class="card border-success h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5>#@(rank++) @item.Title</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>🌍 Кухня:</strong> @item.Cuisine</p>
+                        <p><strong>⏱️ Общее время:</strong> @(item.PrepTime + item.CookTime) мин</p>
+                        <p><strong>⭐ Сложность:</strong> @item.Difficulty</p>
+                        <p class="text-truncate"><strong>🛒 Ингредиенты:</strong> @item.Ingredients</p>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Приготовить</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

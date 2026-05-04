@@ -26,10 +26,26 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Toвары</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Товары</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Recipes" asp-action="Index">Рецепты</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="linqDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                🍳 LINQ-запросы
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="linqDropdown">
+                                <li><a class="dropdown-item" href="/Recipes/ByTimeRange">⏱️ Фильтр по времени</a></li>
+                                <li><a class="dropdown-item" href="/Recipes/TopEasyRecipes">⭐ Топ простых рецептов</a></li>
+                                <li><a class="dropdown-item" href="/Recipes/Search">🔍 Поиск</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/Recipes/GroupedByCuisine">🌍 Группировка по кухне</a></li>
+                                <li><a class="dropdown-item" href="/Recipes/Statistics">📊 Статистика</a></li>
+                                <li><a class="dropdown-item" href="/Recipes/Paginated">📄 Пагинация</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>

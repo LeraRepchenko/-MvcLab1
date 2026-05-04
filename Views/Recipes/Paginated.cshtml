@@ -1,0 +1,84 @@
+﻿@model IEnumerable<MvcLab1.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Рецепты (пагинация)";
+}
+
+<h1>Рецепты <small class="text-muted">страница @ViewBag.CurrentPage из @ViewBag.TotalPages</small></h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">Нет рецептов</div>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Кухня</th>
+                <th>Время подготовки</th>
+                <th>Время приготовления</th>
+                <th>Общее время</th>
+                <th>Сложность</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Cuisine</td>
+                    <td>@item.PrepTime мин</td>
+                    <td>@item.CookTime мин</td>
+                    <td><strong>@(item.PrepTime + item.CookTime) мин</strong></td>
+                    <td>@item.Difficulty</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Детали</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Пагинация -->
+    <nav>
+        <ul class="pagination">
+            @if (ViewBag.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Paginated" asp-route-page="@(ViewBag.CurrentPage - 1)">◀ Назад</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">◀ Назад</span>
+                </li>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Paginated" asp-route-page="@i">@i</a>
+                </li>
+            }
+
+            @if (ViewBag.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Paginated" asp-route-page="@(ViewBag.CurrentPage + 1)">Вперед ▶</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">Вперед ▶</span>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Назад к списку</a>

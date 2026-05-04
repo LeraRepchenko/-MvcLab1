@@ -1,0 +1,63 @@
+﻿@model IEnumerable<MvcLab1.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Фильтр по времени";
+}
+
+<h1>Фильтр рецептов по времени</h1>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label class="form-label">Мин. время подготовки (мин)</label>
+        <input type="number" name="minPrepTime" class="form-control"
+               value="@ViewBag.MinPrepTime" min="0" step="5">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Макс. время приготовления (мин)</label>
+        <input type="number" name="maxCookTime" class="form-control"
+               value="@ViewBag.MaxCookTime" min="0" step="5">
+    </div>
+    <div class="col-md-4 align-self-end">
+        <button type="submit" class="btn btn-primary">Применить фильтр</button>
+        <a asp-action="Index" class="btn btn-secondary">Сбросить</a>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">Рецепты не найдены</div>
+}
+else
+{
+    <p>Найдено рецептов: @Model.Count()</p>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Кухня</th>
+                <th>Подготовка (мин)</th>
+                <th>Приготовление (мин)</th>
+                <th>Общее время</th>
+                <th>Сложность</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Cuisine</td>
+                    <td>@item.PrepTime</td>
+                    <td>@item.CookTime</td>
+                    <td><strong>@(item.PrepTime + item.CookTime) мин</strong></td>
+                    <td>@item.Difficulty</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Подробнее</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

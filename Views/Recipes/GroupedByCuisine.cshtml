@@ -1,0 +1,58 @@
+﻿@using System.Linq
+@model IEnumerable<IGrouping<string, MvcLab1.Models.Recipe>>
+
+@{
+    ViewData["Title"] = "Рецепты по кухням мира";
+}
+
+<h1>🌍 Рецепты по кухням мира</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">Нет рецептов в базе данных</div>
+}
+else
+{
+    <div class="accordion" id="cuisineAccordion">
+        @{
+            int index = 0;
+        }
+        @foreach (var group in Model)
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button @(index != 0 ? "collapsed" : "")"
+                            type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse@(index)">
+                        🍽️ @group.Key
+                        <span class="badge bg-primary ms-2">@group.Count() рецептов</span>
+                    </button>
+                </h2>
+                <div id="collapse@(index)" class="accordion-collapse collapse @(index == 0 ? "show" : "")"
+                     data-bs-parent="#cuisineAccordion">
+                    <div class="accordion-body">
+                        <div class="row">
+                            @foreach (var recipe in group)
+                            {
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@recipe.Title</h5>
+                                            <p class="card-text">
+                                                <strong>⏱️ Время:</strong> @(recipe.PrepTime + recipe.CookTime) мин<br>
+                                                <strong>⭐ Сложность:</strong> @recipe.Difficulty
+                                            </p>
+                                            <a asp-action="Details" asp-route-id="@recipe.Id"
+                                               class="btn btn-outline-primary btn-sm">Подробнее</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            index++;
+        }
+    </div>
+}

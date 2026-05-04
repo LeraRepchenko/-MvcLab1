@@ -1,0 +1,52 @@
+﻿@model IEnumerable<MvcLab1.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Поиск рецептов";
+}
+
+<h1>🔍 Поиск рецептов</h1>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-8">
+        <input type="text" name="searchTerm" class="form-control form-control-lg"
+               placeholder="Введите название, кухню или ингредиент..."
+               value="@ViewBag.SearchTerm">
+    </div>
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary btn-lg">Найти</button>
+        <a asp-action="Index" class="btn btn-secondary btn-lg">Сбросить</a>
+    </div>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(ViewBag.SearchTerm))
+{
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">
+            По запросу <strong>"@ViewBag.SearchTerm"</strong> ничего не найдено.
+            Попробуйте изменить поисковый запрос.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success">
+            Найдено рецептов: <strong>@ViewBag.Count</strong> по запросу "@ViewBag.SearchTerm"
+        </div>
+
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Title</h5>
+                            <p class="card-text text-muted">🌍 @item.Cuisine | ⭐ @item.Difficulty</p>
+                            <p class="card-text">⏱️ @(item.PrepTime + item.CookTime) мин</p>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}

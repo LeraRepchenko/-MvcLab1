@@ -1,0 +1,76 @@
+﻿@model MvcLab1.Models.RecipeStatisticsViewModel
+
+@{
+    ViewData["Title"] = "Статистика рецептов";
+}
+
+<h1>📊 Статистика рецептов</h1>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Всего рецептов</h5>
+                <p class="card-text display-4">@Model.TotalCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Среднее время</h5>
+                <p class="card-text display-4">@Math.Round(Model.AverageTotalTime, 0) мин</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Средняя сложность</h5>
+                <p class="card-text display-4">@Math.Round(Model.AverageDifficultyScore, 1)</p>
+                <small>(1-Легкая, 2-Средняя, 3-Сложная)</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Диапазон времени</h5>
+                <p class="card-text">
+                    от @Model.TotalTimeRange.MinTotalTime мин<br>
+                    до @Model.TotalTimeRange.MaxTotalTime мин
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>Статистика по кухням</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Кухня</th>
+            <th>Количество</th>
+            <th>Среднее время (мин)</th>
+            <th>Мин. подготовка</th>
+            <th>Макс. приготовление</th>
+            <th>Частая сложность</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cuisine in Model.Cuisines)
+        {
+            <tr>
+                <td><strong>🌍 @cuisine.Cuisine</strong></td>
+                <td>@cuisine.Count</td>
+                <td>@Math.Round(cuisine.AverageTime, 0)</td>
+                <td>@cuisine.MinPrepTime</td>
+                <td>@cuisine.MaxCookTime</td>
+                <td>@cuisine.MostCommonDifficulty</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Назад к рецептам</a>
